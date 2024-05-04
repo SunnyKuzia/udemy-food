@@ -1,0 +1,27 @@
+*
+    font-family: 'Roboto', sans-serif
+
+a
+    text-decoration: none
+
+.btn
+    font-size: 18px
+    width: 220px
+    height: 65px
+    font-weight: 700
+    cursor: pointer
+    border: 1px solid rgba(0, 0, 0, .2)
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .2)
+    transition: 0.3s all
+    outline: 0 //Установка значения 0 или none для outline удалит стандартную браузерную обводку, появляющуюся при фокусе на элемент
+    &:hover
+            box-shadow: 0 4px 30px rgba(0, 0, 0, .3)
+    &_white
+        color: $black-color
+        background-color: $white-color
+    &_black
+        color: $white-color
+        background-color: $black-color
+        border: none
+    &_min
+        height: 50px
