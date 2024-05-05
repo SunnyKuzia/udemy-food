@@ -1,0 +1,26 @@
+.sidepanel
+    position: fixed
+    top: 240px
+    left: 60px
+    height: 400px
+    width: 25px //здесь задаем малую ширину, чтобы сдержать блок sidepanel__text
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    align-items: center
+    &__text
+        width: 120px //здесь задаем большую ширину, чтобы текст в блоке sidepanel__text не переносился на другую строку
+        height: 120px
+        font-size: 14px
+        span
+            display: flex
+            transform: rotate(-90deg) translateX(-50px) //здесь задаем поворот текста (работает с display: block / flex) и переместили его на 50px чтобы выровнить span относительно остального контента
+    &__divider
+        height: 165px
+        width: 1px
+        background-color: #000
+    &__icon
+        width: 24px
+        height: 24px
+        img
+            width: 100%
