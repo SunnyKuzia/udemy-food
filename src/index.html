@@ -24,7 +24,7 @@
             <button class="btn btn_white">Связаться с нами</button>
         </div>
     </header>
-    <div class="sidepanel">
+    <aside class="sidepanel">
         <div class="sidepanel__text"><span>Социальные сети</span></div>
         <div class="sidepanel__divider"></div>
         <a href="#" class="sidepanel__icon">
@@ -33,8 +33,8 @@
         <a href="#" class="sidepanel__icon">
             <img src="icons/facebook.svg" alt="facebook">
         </a>
-    </div>
-    <div class="preview">
+    </aside>
+    <section class="preview">
         <div class="bgc_blue"></div>
         <div class="container">
             <div class="tabcontainer">
@@ -66,7 +66,7 @@
                     <h3>Выберите стиль питания</h3>
                     <div class="tabheader__items">
                         <div class="tabheader__item tabheader__item_active">Фитнес</div>
-                        <!-- Важно задавать 2 класса "tabheader__item tabheader__item_active" а не только "tabheader__item_active" потому что sass обработает только стили для tabheader__item_active а для просто tabheader__item нет -->
+                        <!-- Важно! Если мы хотим задать стили и для tabheader__item и для tabheader__item_active: нам надо прописать в class="tabheader__item tabheader__item_active" и в стилях отдельно указывать стили для каждого, потому что иначе sass обработает только стили для нижеуказанного tabheader__item_active (получится более актуальный селектор) а для tabheader__item идущего до него - нет-->
                         <div class="tabheader__item">Премиум</div>
                         <div class="tabheader__item">Постное</div>
                         <div class="tabheader__item">Сбалансированное</div>
@@ -75,9 +75,9 @@
             </div>
             <div class="preview__life">Живи полной жизнью!</div>
         </div>
-    </div>
+    </section>
     <div class="divider"></div>
-    <div class="offer">
+    <section class="offer">
         <div class="bgc_yellow"></div>
         <div class="container">
             <div class="offer__text">
@@ -104,56 +104,56 @@
             <div class="offer__slider">
                 <div class="offer__slider-counter">
                     <div class="arrow arrow_previous">
-                        <img src="" alt="">
+                        <img src="icons/left.svg" alt="left-arrow">
                     </div>
-                    <span id="current"></span>
+                    <span id="current">03</span>
                     /
-                    <span id="total"></span>
+                    <span id="total">04</span>
                     <div class="arrow arrow_next">
-                        <img src="" alt="">
+                        <img src="icons/right.svg" alt="right-arrow">
                     </div>
                 </div>
                 <div class="offer__slider-wrapper">
                     <div class="offer__slide">
-                        <img src="" alt="">
+                        <img src="img/slider/pepper.jpg" alt="pepper">
                     </div>
 
-                    <div class="offer__slide">
-                        <img src="" alt="">
+                    <div class="offer__slide offer__slide__hidden">
+                        <img src="img/slider/food-12.jpg" alt="food">
                     </div>
 
-                    <div class="offer__slide">
-                        <img src="" alt="">
+                    <div class="offer__slide offer__slide__hidden">
+                        <img src="img/slider/olive-oil.jpg" alt="olive-oil">
                     </div>
 
-                    <div class="offer__slide">
-                        <img src="" alt="">
+                    <div class="offer__slide offer__slide__hidden">
+                        <img src="img/slider/paprika.jpg" alt="paprika">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     </div>
     <div class="divider"></div>
-    <div class="calculating">
+    <section class="calculating">
         <div class="container">
             <h2 class="title">Рассчитаем вашу потребность в калориях?</h2>
             <div class="calculating__field">
                 <div class="calculating__subtitle">Ваш пол</div>
-                <div class="calculating__choose">
-                    <div class="calculating__choose-item">Женщина</div>
+                <div class="calculating__choose" id="gender">
+                    <div class="calculating__choose-item calculating__choose-item_active">Женщина</div>
                     <div class="calculating__choose-item">Мужчина</div>
                 </div>
                 <div class="calculating__subtitle">Ваша конституция</div>
                 <div class="calculating__choose calculating__choose_medium">
-                    <div class="calculating__choose-item">Введите рост</div>
-                    <div class="calculating__choose-item">Введите вес</div>
-                    <div class="calculating__choose-item">Введите возраст</div>
+                    <input type="text" id="height" placeholder="Введите рост" class="calculating__choose-item"></input>
+                    <input type="text" id="weight" placeholder="Введите вес" class="calculating__choose-item"></input>
+                    <input type="text" id="age" placeholder="Введите возраст" class="calculating__choose-item"></input>
                 </div>
                 <div class="calculating__subtitle">Выберите вашу физическую активность</div>
                 <div class="calculating__choose calculating__choose_big">
                     <div class="calculating__choose-item">Низкая активность</div>
-                    <div class="calculating__choose-item">Невысокая активность</div>
+                    <div class="calculating__choose-item calculating__choose-item_active">Невысокая активность</div>
                     <div class="calculating__choose-item">Умеренная активность</div>
                     <div class="calculating__choose-item">Высокая активность</div>
                 </div>
@@ -161,13 +161,16 @@
                 <div class="calculating__total">
                     <div class="calculating__subtitle">Ваша суточная норма калорий:
                     </div>
-                    <div class="calculating__result"></div>
+                    <div class="calculating__result">
+                        <span>2700</span>
+                        ккал
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     <div class="divider"></div>
-    <div class="menu">
+    <section class="menu">
         <h2 class="title">Наше меню на день</h2>
         <div class="menu__field">
             <div class="container">
@@ -209,8 +212,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="order">
+    </section>
+    <section class="order">
         <div class="container">
             <div class="title">Заказывай пробный день прямо сейчас!</div>
             <form action="#" class="order__form">
@@ -220,15 +223,16 @@
                 <button class="btn btn_black btn_min">Перезвонить мне</button>
             </form>
         </div>
-    </div>
+    </section>
     <div class="divider"></div>
-    <div class="promotion">
+    <section class="promotion">
         <div class="bgc_yellow"></div>
         <div class="container">
             <div class="promotion__text">
                 <div class="title">Акция для новых клиентов!</div>
                 <div class="promotion__descr">
-                    Мы ценим каждого клиента и предлагаем вам стать одним из них на очень выгодных условиях. Каждому,
+                    Мы ценим каждого клиента и предлагаем вам стать одним из них на очень выгодных условиях.
+                    Каждому,
                     кто закажет доставку питание на неделю, будет предоставлена скидка в размере 20%!<br><br>
                     Акция закончится 20 мая в 00:00
                 </div>
@@ -251,7 +255,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     <footer class="footer">
         <div class="container">
             <div class="social">

@@ -1,0 +1,74 @@
+.offer
+    padding: 70px 0 100px 0
+    position: relative
+    .bgc_yellow
+        position: absolute
+        width: 1109px
+        height: 780px
+        background: rgba(243, 255, 222, .45)
+        z-index: -1
+        top: 50px
+    .container
+        // мы также можем управлять контейнером (конкретно прописываем в какой секции нужный нам контейнер) и задаем ему display: flex чтобы выстроить элементы внутри его
+        display: flex
+        flex-wrap: wrap
+
+    &__text
+        width: 50%
+    &__descr
+        font-size: 18px
+        margin-top: 30px
+        font-weight: 300
+        line-height: 24px
+    &__action
+        width: 50%
+        display: flex
+        justify-content: flex-end
+        align-items: center
+    &__advantages
+        width: 27%
+        margin-top: 50px
+        h2
+            font-weight: 700
+            font-size: 20px
+            margin-top: 20px
+            &:first-child
+                margin-top: 70px
+        &-text
+            margin-top: 20px
+            font-size: 18px
+            font-weight: 300
+            line-height: 21px
+    &__slider
+        display: flex
+        flex-direction: column
+        align-items: flex-end
+        margin-top: 50px
+        width: 73%
+        &-counter
+            display: flex
+            justify-content: flex-end
+            align-items: center
+            font-size: 24px
+            color: rgba(0, 0, 0, .5)
+            span#current
+                font-size: 48px
+                font-weight: 700
+                color: #000
+        &-wrapper
+            width: 650px
+            display: flex
+            justify-content: flex-end
+            margin-top: 15px
+            box-shadow: 0 4px 30px rgba(0, 0, 0, .25)
+    &__slide
+        width: 100%
+        height: 390px
+        img
+            width: 100%
+            height: 100%
+            object-fit: cover
+        &__hidden
+            display: none
+
+                
