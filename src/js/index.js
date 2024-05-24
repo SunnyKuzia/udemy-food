@@ -20,8 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function displayContent(i) {
         contents.forEach(content => {
-            content.classList.add('fade');
-            content.classList.add('tabcontent__hidden');
+            content.classList.add('tabcontent__hidden', 'fade');
         })
         contents[i].classList.remove('tabcontent__hidden');
     }
