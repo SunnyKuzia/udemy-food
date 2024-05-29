@@ -21,7 +21,7 @@
             </nav>
         </div>
         <div class="header__right-block">
-            <button class="btn btn_white">Связаться с нами</button>
+            <button data-modal class="btn btn_white">Связаться с нами</button>
         </div>
     </header>
     <aside class="sidepanel">
@@ -88,7 +88,7 @@
                     привозим прямо под дверь.</div>
             </div>
             <div class="offer__action">
-                <button class="btn btn_black">Связаться с нами</button>
+                <button data-modal class="btn btn_dark">Связаться с нами</button>
             </div>
             <div class="offer__advantages">
                 <h2>Быстро и полезно</h2>
@@ -231,7 +231,7 @@
                 <input type="text" required placeholder="Ваше имя" name="name" class="order__input">
                 <input type="phone" required placeholder="Ваш номер телефона" name="phone" class="order__input">
                 <img src="icons/right.svg" alt="right-arrow">
-                <button class="btn btn_black btn_min">Перезвонить мне</button>
+                <button class="btn btn_dark btn_min">Перезвонить мне</button>
             </form>
         </div>
     </section>
@@ -290,6 +290,19 @@
             </div>
         </div>
     </footer>
+    <section class="modal">
+        <div class="modal__dialog">
+            <div class="modal__content">
+                <form action="#">
+                    <div class="modal__close" data-close>&times;</div>
+                    <div class="modal__title">Мы свяжемся с Вами как можно быстрее</div>
+                    <input required type="text" name="name" class="modal__input" placeholder="Ваше имя">
+                    <input required type="phone" name="phone" class="modal__input" placeholder="Ваш номер телефона">
+                    <button class="btn btn_dark btn_min">Перезвонить мне</button>
+                </form>
+            </div>
+        </div>
+    </section>
     <script src="js/index.js"></script>
 </body>
 

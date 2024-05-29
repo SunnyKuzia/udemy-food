@@ -83,4 +83,48 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     setTimer(deadline, '.timer');
+
+    //Modal
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('[data-close]');
+
+    function modalOpen() {
+        modal.classList.add('show');
+        document.body.classList.add('noscroll');
+        clearTimeout(modalTimerId);
+    }
+
+    function modalClose() {
+        modal.classList.remove('show');
+        document.body.classList.remove('noscroll');
+    }
+
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', modalOpen);
+    })
+
+    modalCloseBtn.addEventListener('click', modalClose);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modalClose();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape' && modal.classList.contains('show')) modalClose();
+    }); //закрытие модального окна по нажатию кнопки escape
+    // Внимательно: навешиваем на document а не на конкретный элемент!!!
+
+    const modalTimerId = setTimeout(modalOpen, 3000);
+
+    function showModalByScroll() {
+        if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            modalOpen();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 });
