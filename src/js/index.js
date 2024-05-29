@@ -127,4 +127,5 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', showModalByScroll);
+    //Внимательно: навешиваем на window а не на конкретный элемент!!! 
 });
