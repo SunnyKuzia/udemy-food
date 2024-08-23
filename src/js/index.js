@@ -1,4 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
+
     //Tabs
 
     const tabheader = document.querySelector('.tabheader'),
@@ -34,7 +35,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
     //Timer
+
 
     const deadline = '2024-06-25';
 
@@ -84,19 +87,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setTimer(deadline, '.timer');
 
+
     //Modal
 
-    const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal'),
-        modalCloseBtn = document.querySelector('[data-close]');
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'), // кнопки 'Связаться с нами'
+        modal = document.querySelector('.modal'); // затемненная зона
 
     function modalOpen() {
         modal.classList.add('show');
+        modal.classList.remove('hide');
         document.body.classList.add('noscroll');
         clearTimeout(modalTimerId);
     }
 
     function modalClose() {
+        modal.classList.add('hide');
         modal.classList.remove('show');
         document.body.classList.remove('noscroll');
     }
@@ -106,10 +112,9 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', modalOpen);
     })
 
-    modalCloseBtn.addEventListener('click', modalClose);
-
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modalClose();
+        if (e.target === modal || e.target.hasAttribute('data-close')) modalClose();
+        // клик вне контента модального окна (затемненная зона)
     });
 
     document.addEventListener('keydown', (e) => {
@@ -117,7 +122,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }); //закрытие модального окна по нажатию кнопки escape
     // Внимательно: навешиваем на document а не на конкретный элемент!!!
 
-    // const modalTimerId = setTimeout(modalOpen, 3000);
+    const modalTimerId = setTimeout(modalOpen, 300000);
 
     function showModalByScroll() {
         if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -128,6 +133,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', showModalByScroll);
     //Внимательно: навешиваем на window а не на конкретный элемент!!! 
+
 
     // Classes for menu cards
     class MenuCard {
@@ -189,4 +195,158 @@ window.addEventListener('DOMContentLoaded', () => {
         21,
         '.menu .container').render();
 
+
+    // Forms
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'img/modal/spinner.svg',
+        success: 'Спасибо! Мы скоро свяжемся с Вами',
+        failure: 'Что-то пошло не так...'
+    };
+
+    forms.forEach(item => postData(item));
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            /* submit срабатывает при нажатии button внутри form */
+
+            e.preventDefault();
+            /* без данной строки отправка формы будет сопровождаться перезагрузкой страницы (ее дефолтное поведение) а нам это не нужно 
+            !!! пишем в самом начале*/
+
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.classList.add('spinner');
+            form.insertAdjacentElement('afterend', statusMessage);
+            //console.log(form.childNodes);
+
+            const formData = new FormData(form);
+
+            // из данных formData формируем объект 
+            const object = {};
+            formData.forEach(function (value, key) {
+                object[key] = value;
+            });
+
+            // а далее преобразуем в формат JSON
+            const json = JSON.stringify(object);
+
+            // Fetch
+
+            fetch('server.php', {
+                method: 'POST',
+                // когда fetch и отправляются данные FormData, то в headers не надо ничего указывать
+                // а для JSON указываем как и с XMLHttpRequest
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: json
+                // или 
+                //body: formData
+
+            })
+                //сначала получаем ответ(data) и расшифровываем его, автоматически 
+                //возвращается Promise c расшифровкой
+                .then((data) => data.text()) // для FormData
+                // а потом уже расшифровку console.log
+                .then((data) => {
+                    console.log(data);
+                    showThanksModal(message.success);
+                    statusMessage.remove();
+                })
+                .catch(() => {
+                    showThanksModal(message.failure);
+                    statusMessage.remove();
+                })
+                .finally(() => form.reset());
+
+
+            // XMLHttpRequest
+
+            // const request = new XMLHttpRequest();
+            // request.open('POST', 'server.php');
+            // // request.setRequestHeader('Content-type', 'multipart/form-data');
+            // /* ('Content-type', 'multipart/form-data') прописывается если мы используем объект FormData */
+            // request.setRequestHeader('Content-type', 'application/json');
+            // // вводим если отправляем данные не через FormData, а через JSON
+
+            // const formData = new FormData(form);
+            // // собрали все введенные и отправленные данные из формы
+            // //request.send(formData);
+
+            // const object = {};
+            // formData.forEach(function (value, key) {
+            //     object[key] = value;
+            // });
+
+            // const json = JSON.stringify(object);
+            // request.send(json);// отправляем данные как JSON через XMLHttpRequest
+
+
+            // request.addEventListener('load', () => {
+            //     if (request.status === 200) {
+            //         console.log(request.response);
+            //         showThanksModal(message.success);
+            //         statusMessage.remove();
+            //         form.reset();//очищает введенные в форму данные
+            //     } else {
+            //         showThanksModal(message.failure);
+            //         statusMessage.remove();
+            //     }
+            // });
+        });
+    }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+        prevModalDialog.classList.remove('show');
+        prevModalDialog.classList.add('hide');
+        modalOpen();
+
+        /* первая кнопка выведет модалку с заполненным нижеуказанным контентом
+        НО в разделе order модалка не покажется, поэтому мы ее открываем modalOpen() и заполняем кодом ниже */
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>&times;</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            modalClose();
+        }, 4000);
+    }
+
+    // Просто пример отправки данных на fake сервер https://jsonplaceholder.typicode.com/
+
+    // fetch('https://jsonplaceholder.typicode.com/posts', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ name: 'Alex' })
+    //     //можем передать строку или объект
+    // })
+    //     .then((response) => response.json())
+    //     .then((json) => console.log(json));
+
+
+
+    fetch('http://localhost:3000/menu')
+        .then((data) => data.json())
+        .then((res) => console.log(res));
 });
+
+
+
+
+

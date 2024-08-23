@@ -10,6 +10,10 @@
     &__dialog
         max-width: 500px
         margin: 40px auto
+        &.show
+            display: block
+        &.hide
+            display: none
     &__content
         position: relative
         width: 100%
@@ -52,4 +56,11 @@
         margin: 0 auto
     &.show
         display: block
+    &.hide
+        display: none
 
+.spinner
+    display: block
+    margin: 0 auto
+    width: 38px
+    height: 38px
