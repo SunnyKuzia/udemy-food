@@ -92,7 +92,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     const modalTrigger = document.querySelectorAll('[data-modal]'), // кнопки 'Связаться с нами'
-        modal = document.querySelector('.modal'); // затемненная зона
+        modal = document.querySelector('.modal'); // затемненная зона и самый верхний div
 
     function modalOpen() {
         modal.classList.add('show');
@@ -171,29 +171,22 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    new MenuCard(
-        'img/tabs/vegy.jpg',
-        'vegy',
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        '.menu .container').render();
+    // Getting information about cards from db.json
 
-    new MenuCard(
-        'img/tabs/elite.jpg',
-        'elite',
-        'Меню "Премиум"',
-        'В меню "Премиум" мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        14,
-        '.menu .container').render();
+    const getResource = async (url) => {
+        const res = await fetch(url);
+        // проверяем что мы получили информацию и все нормально сработало
+        if (!res.ok) throw new Error(`Couldn't fetch ${url}, status: ${res.status}`);
+        // ошибку далее словит catch и обработает
+        return await res.json();
+    }
 
-    new MenuCard(
-        'img/tabs/post.jpg',
-        'post',
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        21,
-        '.menu .container').render();
+    getResource('http://localhost:3000/menu')
+        .then((data) => {
+            data.forEach(({ img, altimg, title, descr, price }) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        }); //({ img, altimg, title, descr, price }) это деструктуризация объекта полученного при переборе массива (т.о. мы получили каждое св-во объекта как отдельную переменную (примерно это выглядит: const altimg = "vegy",) и далее передаем соответствующее значение в класс new MenuCard) и через метод .render() создаем и помещаем карточку на страницу
 
 
     // Forms
@@ -206,9 +199,25 @@ window.addEventListener('DOMContentLoaded', () => {
         failure: 'Что-то пошло не так...'
     };
 
-    forms.forEach(item => postData(item));
+    forms.forEach(item => bindPostData(item));
 
-    function postData(form) {
+    // постим данные:
+    const postData = async (url, data) => {
+        /* async и await всегда идут в паре, async ставится перед функцией внутри которой будет выполняться ассинхронный код */
+        const res = await fetch(url, {
+            /* await ждет когда вернется результат и только потом код продолжит свое выполнение */
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json(); // await ждет результат
+    };
+
+
+    function bindPostData(form) { //привязываем постинг данных для дальнейшей работы
         form.addEventListener('submit', (e) => {
             /* submit срабатывает при нажатии button внутри form */
 
@@ -224,20 +233,38 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form);
 
-            // из данных formData формируем объект 
-            const object = {};
-            formData.forEach(function (value, key) {
-                object[key] = value;
-            });
+            /*  из данных formData формируем объект 
+             const object = {};
+              formData.forEach(function (value, key) {
+                  object[key] = value;
+              });
+ 
+              и далее преобразуем его в формат JSON если будем отправлять в формате JSON
+              const json = JSON.stringify(object); */
 
-            // а далее преобразуем в формат JSON
-            const json = JSON.stringify(object);
+            // или так (более современный и короткий вариант)
+            // из formData получаем массив массивов данных, потом формируем из них объект
+            // в конце преобразуем его в JSON
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+            console.log(json);
 
             // Fetch
 
-            fetch('server.php', {
+            postData('http://localhost:3000/requests', json)
+                .then(data => {
+                    console.log(data);
+                    showThanksModal(message.success);
+                    statusMessage.remove();
+                })
+                .catch(() => {
+                    showThanksModal(message.failure);
+                    statusMessage.remove();
+                })
+                .finally(() => form.reset());
+
+            /* fetch('server.php', {
                 method: 'POST',
-                // когда fetch и отправляются данные FormData, то в headers не надо ничего указывать
+                // когда используем fetch и отправляются данные FormData, то в headers не надо ничего указывать
                 // а для JSON указываем как и с XMLHttpRequest
                 headers: {
                     'Content-type': 'application/json'
@@ -260,7 +287,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     showThanksModal(message.failure);
                     statusMessage.remove();
                 })
-                .finally(() => form.reset());
+                .finally(() => form.reset()); */
 
 
             // XMLHttpRequest
@@ -274,7 +301,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             // const formData = new FormData(form);
             // // собрали все введенные и отправленные данные из формы
-            // //request.send(formData);
+            // //request.send(formData); //отправляем данные FormData
 
             // const object = {};
             // formData.forEach(function (value, key) {
@@ -305,7 +332,7 @@ window.addEventListener('DOMContentLoaded', () => {
         prevModalDialog.classList.add('hide');
         modalOpen();
 
-        /* первая кнопка выведет модалку с заполненным нижеуказанным контентом
+        /* первая кнопка button на сайте выведет модалку с заполненным нижеуказанным контентом
         НО в разделе order модалка не покажется, поэтому мы ее открываем modalOpen() и заполняем кодом ниже */
 
         const thanksModal = document.createElement('div');
@@ -344,6 +371,11 @@ window.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/menu')
         .then((data) => data.json())
         .then((res) => console.log(res));
+    // доступ к db.json через Терминал и команду json-server src/db.json 
+
+
+
+
 });
 
 
